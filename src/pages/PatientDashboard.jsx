@@ -1,39 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { db, storage } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
-import { LayoutDashboard, Calendar, FileText, Settings, LogOut, Plus, Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import {
+    LayoutDashboard, Calendar, FileText, Settings, LogOut,
+    Plus, Search, Sparkles, Bell, Sun, MoreVertical, Download, X
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { analyzePrescription } from '../utils/aiService';
 
 const PatientDashboard = () => {
     const { currentUser, userData } = useAuth();
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState('dashboard');
     const [appointments, setAppointments] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
     const [hospitals, setHospitals] = useState([]);
+
+    // Modals & AI
     const [bookingModal, setBookingModal] = useState(false);
     const [selectedHospital, setSelectedHospital] = useState('');
     const [bookingDate, setBookingDate] = useState('');
+    const [analyzingId, setAnalyzingId] = useState(null);
+    const [aiResult, setAiResult] = useState(null);
+    const [showAiModal, setShowAiModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            // Fetch Appointments
+            if (!currentUser) return;
             const qAppts = query(collection(db, 'appointments'), where('patientId', '==', currentUser.uid));
             const snapAppts = await getDocs(qAppts);
             setAppointments(snapAppts.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-            // Fetch Prescriptions
             const qPresc = query(collection(db, 'prescriptions'), where('patientId', '==', currentUser.uid));
             const snapPresc = await getDocs(qPresc);
             setPrescriptions(snapPresc.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-            // Fetch Hospitals for booking
             const qHosp = query(collection(db, 'users'), where('role', '==', 'hospital'));
             const snapHosp = await getDocs(qHosp);
             setHospitals(snapHosp.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         };
-        if (currentUser) fetchData();
+        fetchData();
     }, [currentUser]);
+
+    const handleAiAnalysis = async (prescription) => {
+        setAnalyzingId(prescription.id);
+        const result = await analyzePrescription(prescription.notes + " " + prescription.diagnosis);
+        setAiResult(result);
+        setAnalyzingId(null);
+        setShowAiModal(true);
+    };
 
     const handleBookAppointment = async (e) => {
         e.preventDefault();
@@ -42,170 +57,257 @@ const PatientDashboard = () => {
                 patientId: currentUser.uid,
                 patientName: userData.name,
                 hospitalId: selectedHospital,
+                hospitalName: hospitals.find(h => h.id === selectedHospital)?.name || 'Health Center',
                 date: bookingDate,
                 status: 'pending',
                 createdAt: serverTimestamp()
             });
             setBookingModal(false);
-            // Refresh logic here
+            alert('Appointment requested successfully!');
         } catch (err) {
             console.error(err);
         }
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex h-screen bg-[#f8fafc]">
             {/* Sidebar */}
-            <div className="w-64 bg-[#0f766e] text-white p-6 hidden md:block">
-                <h2 className="text-2xl font-bold mb-10">SwasthyaKosh</h2>
-                <nav className="space-y-4">
-                    <SidebarItem icon={<LayoutDashboard />} label="Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
-                    <SidebarItem icon={<Calendar />} label="Appointments" active={activeTab === 'appointments'} onClick={() => setActiveTab('appointments')} />
-                    <SidebarItem icon={<FileText />} label="Prescriptions" active={activeTab === 'prescriptions'} onClick={() => setActiveTab('prescriptions')} />
-                    <SidebarItem icon={<Settings />} label="Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
-                </nav>
-            </div>
+            <aside className="w-64 border-r bg-white flex flex-col">
+                <div className="p-6 flex items-center gap-2 mb-4">
+                    <div className="bg-[#0f766e] p-1.5 rounded-lg">
+                        <Plus className="text-white w-6 h-6 rotate-45" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900">SwasthyaKosh</h2>
+                </div>
 
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col">
-                <header className="bg-white border-b p-4 flex justify-between items-center px-8">
-                    <h1 className="text-xl font-semibold capitalize">{activeTab}</h1>
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">Welcome, {userData?.name}</span>
-                        <button className="p-2 rounded-full hover:bg-gray-100"><LogOut className="w-5 h-5 text-gray-500" /></button>
+                <nav className="flex-1 px-4 space-y-1">
+                    <SidebarNavItem icon={<LayoutDashboard />} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+                    <SidebarNavItem icon={<FileText />} label="My Prescriptions" active={activeTab === 'prescriptions'} onClick={() => setActiveTab('prescriptions')} />
+                    <SidebarNavItem icon={<Calendar />} label="Appointments" active={activeTab === 'appointments'} onClick={() => setActiveTab('appointments')} />
+                    <SidebarNavItem icon={<FileText />} label="Health Records" active={activeTab === 'records'} onClick={() => setActiveTab('records')} />
+                </nav>
+
+                <div className="p-4 border-t space-y-1">
+                    <SidebarNavItem icon={<Settings />} label="Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-red-600 transition-colors">
+                        <Sun className="w-5 h-5" />
+                        <span className="font-medium text-sm">Dark Mode</span>
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Area */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Header */}
+                <header className="h-20 bg-white border-b flex items-center justify-between px-8 shrink-0">
+                    <h1 className="text-2xl font-bold text-gray-900 capitalize">{activeTab}</h1>
+
+                    <div className="flex items-center gap-6">
+                        <div className="relative w-72">
+                            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+                            <input type="text" placeholder="Search records..." className="search-input" />
+                        </div>
+                        <button className="p-2 text-gray-400 hover:text-[#0f766e]">
+                            <Bell className="w-6 h-6" />
+                        </button>
+                        <div className="flex items-center gap-3 pl-6 border-l">
+                            <div className="text-right">
+                                <p className="text-sm font-bold text-gray-900">{userData?.name || 'Patient'}</p>
+                                <p className="text-xs text-gray-500">Gold Member</p>
+                            </div>
+                            <div className="avatar bg-teal-50 text-[#0f766e] font-bold">{userData?.name?.charAt(0) || 'P'}</div>
+                        </div>
                     </div>
                 </header>
 
-                <main className="p-8">
-                    <AnimatePresence mode="wait">
-                        {activeTab === 'overview' && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} key="overview">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                    <StatCard label="Total Prescriptions" value={prescriptions.length} icon={<FileText className="text-teal-600" />} />
-                                    <StatCard label="Pending Appointments" value={appointments.filter(a => a.status === 'pending').length} icon={<Calendar className="text-orange-500" />} />
-                                    <StatCard label="Health Score" value="A+" icon={<FileText className="text-blue-500" />} />
-                                </div>
+                {/* Content */}
+                <main className="flex-1 overflow-y-auto p-8">
+                    <div className="max-w-7xl mx-auto space-y-8">
 
-                                <div className="card">
-                                    <div className="flex justify-between items-center mb-4">
-                                        <h3 className="text-lg font-semibold">Recent Prescriptions</h3>
-                                        <button className="text-[#0f766e] text-sm font-medium hover:underline">View All</button>
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <StatCard2 label="Prescriptions" value={prescriptions.length} trend="Total" icon={<FileText className="text-teal-600" />} color="teal" />
+                            <StatCard2 label="Pending Appointments" value={appointments.filter(a => a.status === 'pending').length} trend="Status" icon={<Calendar className="text-orange-600" />} color="orange" />
+                            <StatCard2 label="Health Rating" value="A+" trend="Excellent" icon={<Sparkles className="text-blue-600" />} color="blue" />
+                        </div>
+
+                        {/* Dashboard Overview */}
+                        {activeTab === 'dashboard' && (
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Recent Prescriptions */}
+                                <div className="card p-0 overflow-hidden">
+                                    <div className="p-6 border-b flex justify-between items-center">
+                                        <h3 className="font-bold text-gray-900">Recent Prescriptions</h3>
+                                        <button onClick={() => setActiveTab('prescriptions')} className="text-[#0f766e] text-sm font-bold hover:underline">View All</button>
                                     </div>
-                                    <div className="divide-y">
+                                    <div className="divide-y text-sm">
                                         {prescriptions.length === 0 ? (
-                                            <p className="py-4 text-gray-500 italic">No prescriptions found.</p>
+                                            <p className="p-10 text-center text-gray-500 italic">No prescriptions found.</p>
                                         ) : (
-                                            prescriptions.slice(0, 3).map(p => (
-                                                <div key={p.id} className="py-3 flex justify-between items-center">
-                                                    <div>
-                                                        <p className="font-medium">{p.diagnosis}</p>
-                                                        <p className="text-xs text-gray-500">{p.hospitalName} • {new Date(p.date?.seconds * 1000).toLocaleDateString()}</p>
+                                            prescriptions.slice(0, 4).map(p => (
+                                                <div key={p.id} className="p-6 flex justify-between items-center table-row">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="p-2 bg-teal-50 text-teal-600 rounded-lg"><FileText size={20} /></div>
+                                                        <div>
+                                                            <p className="font-bold text-gray-900">{p.diagnosis}</p>
+                                                            <p className="text-xs text-gray-500">{p.hospitalName} • {new Date(p.date?.seconds * 1000).toLocaleDateString()}</p>
+                                                        </div>
                                                     </div>
-                                                    <button className="btn btn-outline py-1 px-3 text-sm">Download</button>
+                                                    <button
+                                                        onClick={() => handleAiAnalysis(p)}
+                                                        className="btn btn-outline border-teal-100 text-[#0f766e] py-1 px-4 text-xs font-bold whitespace-nowrap"
+                                                    >
+                                                        AI Scan
+                                                    </button>
                                                 </div>
                                             ))
                                         )}
                                     </div>
                                 </div>
-                            </motion.div>
+
+                                {/* Upcoming Appointments */}
+                                <div className="card p-0 overflow-hidden">
+                                    <div className="p-6 border-b flex justify-between items-center">
+                                        <h3 className="font-bold text-gray-900">Appointments</h3>
+                                        <button onClick={() => setBookingModal(true)} className="btn btn-primary bg-[#0f766e] py-1 px-4 text-xs">New Request</button>
+                                    </div>
+                                    <div className="divide-y text-sm px-6">
+                                        {appointments.length === 0 ? (
+                                            <p className="py-10 text-center text-gray-500 italic">No appointments scheduled.</p>
+                                        ) : (
+                                            appointments.slice(0, 4).map(a => (
+                                                <div key={a.id} className="py-4 flex justify-between items-center">
+                                                    <div className="flex gap-4">
+                                                        <div className={`p-2 rounded-lg ${a.status === 'approved' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+                                                            <Calendar size={20} />
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-bold text-gray-900">{a.hospitalName}</p>
+                                                            <p className="text-xs text-gray-500">{a.date}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span className={`status-pill status-${a.status === 'approved' ? 'confirmed' : 'pending'}`}>
+                                                        {a.status === 'approved' ? 'Confirmed' : 'Pending'}
+                                                    </span>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         )}
 
-                        {activeTab === 'appointments' && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} key="appointments" className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-lg font-semibold">My Appointments</h3>
-                                    <button onClick={() => setBookingModal(true)} className="btn btn-primary btn-sm"><Plus className="w-4 h-4" /> Book New</button>
-                                </div>
-                                <div className="card">
-                                    <table className="w-full text-left">
-                                        <thead>
-                                            <tr className="border-b text-gray-500 text-sm">
-                                                <th className="pb-3 font-medium">Hospital</th>
-                                                <th className="pb-3 font-medium">Date</th>
-                                                <th className="pb-3 font-medium">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y">
-                                            {appointments.map(a => (
-                                                <tr key={a.id}>
-                                                    <td className="py-4">{a.hospitalName || 'Health Center'}</td>
-                                                    <td className="py-4">{a.date}</td>
-                                                    <td className="py-4">
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${a.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                                a.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                                                            }`}>
-                                                            {a.status}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </motion.div>
+                        {/* Other tabs placeholders */}
+                        {activeTab !== 'dashboard' && (
+                            <div className="card p-20 text-center text-gray-500 bg-white">
+                                <FileText className="mx-auto w-12 h-12 mb-4 text-gray-200" />
+                                <h3 className="text-xl font-bold text-gray-900">Welcome to {activeTab}</h3>
+                                <p>This module is currently being optimized for your experience.</p>
+                            </div>
                         )}
-                    </AnimatePresence>
+                    </div>
                 </main>
             </div>
 
             {/* Booking Modal */}
-            {bookingModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-xl p-6 w-full max-w-md">
-                        <h3 className="text-xl font-bold mb-4">Request Appointment</h3>
-                        <form onSubmit={handleBookAppointment} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Select Hospital</label>
-                                <select
-                                    className="w-full p-2 border rounded-md"
-                                    value={selectedHospital}
-                                    onChange={(e) => setSelectedHospital(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Choose a hospital...</option>
-                                    {hospitals.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
-                                </select>
+            <AnimatePresence>
+                {bookingModal && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-2xl font-bold text-gray-900">Book Appointment</h3>
+                                <button onClick={() => setBookingModal(false)} className="text-gray-400 hover:text-gray-600"><X /></button>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Date</label>
-                                <input
-                                    type="date"
-                                    className="w-full p-2 border rounded-md"
-                                    value={bookingDate}
-                                    onChange={(e) => setBookingDate(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="flex gap-3 mt-6">
-                                <button type="button" onClick={() => setBookingModal(false)} className="flex-1 btn btn-outline">Cancel</button>
-                                <button type="submit" className="flex-1 btn btn-primary">Submit Request</button>
-                            </div>
-                        </form>
+                            <form onSubmit={handleBookAppointment} className="space-y-6">
+                                <div className="space-y-1">
+                                    <label className="text-sm font-bold text-gray-700">Choose Hospital</label>
+                                    <select className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-[#0f766e] outline-none" value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)} required>
+                                        <option value="">Select a hospital...</option>
+                                        {hospitals.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-bold text-gray-700">Preferred Date</label>
+                                    <input type="date" className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-[#0f766e] outline-none" value={bookingDate} onChange={(e) => setBookingDate(e.target.value)} required />
+                                </div>
+                                <button type="submit" className="w-full btn btn-primary bg-[#0f766e] py-4 text-lg font-bold">Request Confirmation</button>
+                            </form>
+                        </motion.div>
                     </div>
-                </div>
-            )}
+                )}
+            </AnimatePresence>
+
+            {/* AI Analysis Modal - Styled to match */}
+            <AnimatePresence>
+                {showAiModal && aiResult && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-8">
+                                <h3 className="text-2xl font-bold text-teal-800 flex items-center gap-3">
+                                    <span className="bg-teal-100 p-2 rounded-xl text-xl">✨</span> Swasthya AI Insights
+                                </h3>
+                                <button onClick={() => setShowAiModal(false)} className="text-gray-400 hover:text-gray-600"><X /></button>
+                            </div>
+                            <div className="space-y-8">
+                                <div className="p-6 bg-teal-50 border border-teal-100 rounded-2xl">
+                                    <p className="text-xs font-bold text-teal-600 uppercase mb-2 tracking-widest">Medical Summary</p>
+                                    <p className="text-teal-950 text-lg leading-relaxed font-semibold">{aiResult.summary}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold text-gray-400 uppercase mb-4 tracking-widest">Medication Breakdown</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {aiResult.medicines.map((med, i) => (
+                                            <div key={i} className="p-5 border border-gray-100 rounded-2xl bg-gray-50/30">
+                                                <p className="font-extrabold text-[#0f766e] text-lg">{med.name}</p>
+                                                <p className="text-xs font-bold text-gray-400 mb-3">{med.category}</p>
+                                                <p className="text-sm text-gray-600 leading-snug">{med.use}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {aiResult.allWarnings.length > 0 && (
+                                    <div className="p-6 bg-orange-50 border border-orange-100 rounded-2xl">
+                                        <p className="text-xs font-bold text-orange-600 uppercase mb-3 tracking-widest">Safety Advisory</p>
+                                        <ul className="space-y-2">
+                                            {aiResult.allWarnings.map((w, i) => <li key={i} className="text-sm text-orange-800 font-medium flex gap-2"><span>⚠️</span> {w}</li>)}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                            <button onClick={() => setShowAiModal(false)} className="w-full mt-10 btn btn-primary bg-[#0f766e] py-4 text-lg font-bold">Close Analysis</button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
 
-const SidebarItem = ({ icon, label, active, onClick }) => (
-    <button
-        onClick={onClick}
-        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${active ? 'bg-white/10 text-white' : 'text-teal-100 hover:bg-white/5'}`}
-    >
-        {React.cloneElement(icon, { size: 20 })}
-        <span className="font-medium">{label}</span>
+const SidebarNavItem = ({ icon, label, active, onClick }) => (
+    <button onClick={onClick} className={`w-full flex items-center gap-3 px-3 py-3 transition-all group ${active ? 'sidebar-active shadow-sm' : 'text-gray-500 hover:bg-gray-50'}`}>
+        <span className={`${active ? 'text-teal-600' : 'text-gray-400 group-hover:text-teal-500'}`}>{React.cloneElement(icon, { size: 20 })}</span>
+        <span className="font-semibold text-sm">{label}</span>
     </button>
 );
 
-const StatCard = ({ label, value, icon }) => (
-    <div className="card flex items-center gap-4">
-        <div className="p-3 bg-gray-50 rounded-lg">{icon}</div>
-        <div>
-            <p className="text-sm text-gray-500">{label}</p>
-            <p className="text-2xl font-bold">{value}</p>
+const StatCard2 = ({ label, value, trend, icon, color }) => {
+    const colors = {
+        teal: 'bg-teal-50 text-teal-600',
+        orange: 'bg-orange-50 text-orange-600',
+        blue: 'bg-blue-50 text-blue-600',
+    };
+    return (
+        <div className="card">
+            <div className="flex justify-between items-start mb-4">
+                <div className={`p-4 rounded-2xl ${colors[color] || 'bg-gray-50'}`}>
+                    {React.cloneElement(icon, { size: 24 })}
+                </div>
+                <div className="px-2 py-1 rounded bg-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-tighter">{trend}</div>
+            </div>
+            <p className="text-4xl font-black text-gray-900">{value}</p>
+            <p className="text-sm font-bold text-gray-400 mt-1 uppercase tracking-widest">{label}</p>
         </div>
-    </div>
-);
+    );
+};
 
 export default PatientDashboard;
