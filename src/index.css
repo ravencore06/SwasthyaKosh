@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #0f766e;
-  --primary-hover: #0d9488;
-  --secondary: #f0fdfa;
+  --primary: #008080;
+  --primary-teal: #008080;
+  --deep-teal: #006666;
+  --light-teal: #e6f2f2;
+  --primary-hover: #006666;
+  --secondary: #e6f2f2;
   --accent: #2563eb;
   --background: #f8fafc;
   --card-bg: #ffffff;
@@ -21,7 +24,7 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   background-color: var(--background);
   color: var(--text-main);
   line-height: 1.5;
