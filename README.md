@@ -1,4 +1,4 @@
-🏥 MedPreserve (formely SwasthyaKosh)
+🏥 SwasthyaKosh
 
 A secure digital platform designed to store, manage, and access medical prescriptions and health records in one centralized location.
 
