@@ -1,16 +1,52 @@
-# React + Vite
+🏥 SwasthyaKosh - Public Prescriptions Storage System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A secure digital platform designed to store, manage, and access medical prescriptions and health records in one centralized location.
 
-Currently, two official plugins are available:
+The system replaces fragmented paper-based records with a reliable, long-term digital solution that improves accessibility and continuity of care.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📌 Problem Statement
 
-## React Compiler
+Medical prescriptions are often lost, scattered, or inaccessible across different hospitals and clinics. This results in poor medical history tracking, repeated tests, and inefficient healthcare decisions.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+💡 Solution Overview
 
-## Expanding the ESLint configuration
+The platform creates a unique digital record for each user, enabling lifelong storage of prescriptions and medical history. It ensures consistent access to healthcare data whenever and wherever needed.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🔑 Key Features
+
+Secure user authentication
+
+Centralized prescription storage
+
+Organized medical history
+
+Easy access across devices
+
+Scalable and reliable system design
+
+🛠️ Tech Stack
+
+Frontend: HTML, CSS, JavaScript
+
+Backend & Services: Firebase Authentication, Firebase Database, Firebase Hosting
+
+Version Control: GitHub
+
+🧠 System Perspective
+
+Unlike traditional systems that treat prescriptions as isolated documents, this platform maintains continuous medical records, acting as a single source of truth for patients and healthcare providers.
+
+📈 Future Scope
+
+Doctor and hospital access integration
+
+AI-based prescription insights
+
+Enhanced security and encryption
+
+Health trend analytics
+
+👤 Author
+
+Srinidhi Sadhanala 
+B.Tech Student | Aspiring Technologist
