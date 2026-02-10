@@ -60,14 +60,14 @@ const LoginPage = () => {
                         <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md ring-1 ring-white/30">
                             <Plus className="text-white w-6 h-6 rotate-45" />
                         </div>
-                        <h2 className="text-3xl font-black tracking-tighter">MedPreserve</h2>
+                        <h2 className="text-3xl font-black tracking-tighter">SwasthyaKosh</h2>
                     </div>
 
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-6">
-                        <h1 className="text-7xl font-black leading-tight tracking-tighter">
+                        <span className="text-sm font-black leading-tight tracking-tighter">
                             The future of <br />
                             <span className="text-teal-300">medical storage.</span>
-                        </h1>
+                        </span>
                         <p className="text-xl text-teal-50/80 max-w-lg font-medium leading-relaxed">
                             A secure, AI-powered platform for patients and hospitals to maintain continuous, lifelong medical records.
                         </p>
@@ -90,45 +90,45 @@ const LoginPage = () => {
             <div className="flex-1 flex items-center justify-center p-8 lg:p-20 bg-[#f8fafc]">
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md bg-white p-12 rounded-[3.5rem] shadow-2xl shadow-blue-500/5">
 
-                    <div className="text-center mb-10 lg:hidden">
-                        <h1 className="text-4xl font-black text-[#0f766e] tracking-tighter">MedPreserve</h1>
+                    <div className="text-center mb-6 lg:hidden">
+                        <h1 className="text-3xl font-black text-[#0f766e] tracking-tighter">SwasthyaKosh</h1>
                     </div>
 
-                    <div className="flex mb-10 bg-gray-50 p-1.5 rounded-3xl ring-1 ring-gray-100">
+                    <div className="flex mb-8 bg-gray-50 p-1.5 rounded-2xl ring-1 ring-gray-100/50">
                         <button
-                            className={`flex-1 py-3 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all ${role === 'patient' ? 'bg-white text-teal-600 shadow-xl' : 'text-gray-400'}`}
+                            className={`flex-1 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all ${role === 'patient' ? 'bg-white text-teal-600 shadow-lg' : 'text-gray-400'}`}
                             onClick={() => setRole('patient')}
                         >
-                            <User className="inline-block mr-2 w-4 h-4" /> Patient
+                            <User className="inline-block mr-1.5 w-3.5 h-3.5" /> Patient
                         </button>
                         <button
-                            className={`flex-1 py-3 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all ${role === 'hospital' ? 'bg-white text-teal-600 shadow-xl' : 'text-gray-400'}`}
+                            className={`flex-1 py-2.5 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all ${role === 'hospital' ? 'bg-white text-teal-600 shadow-lg' : 'text-gray-400'}`}
                             onClick={() => setRole('hospital')}
                         >
-                            <Stethoscope className="inline-block mr-2 w-4 h-4" /> Hospital
+                            <Stethoscope className="inline-block mr-1.5 w-3.5 h-3.5" /> Hospital
                         </button>
                     </div>
 
-                    <div className="space-y-2 mb-10">
-                        <h2 className="text-4xl font-black tracking-tighter text-gray-900 leading-none">
+                    <div className="space-y-1 mb-8">
+                        <h2 className="text-3xl font-black tracking-tighter text-gray-900 leading-tight">
                             {isLogin ? 'Welcome back.' : 'Join the system.'}
                         </h2>
-                        <p className="text-gray-400 font-bold uppercase text-[10px] tracking-[0.2em] ml-1">
+                        <p className="text-gray-400 font-bold uppercase text-[9px] tracking-[0.15em] ml-1">
                             {role} access portal
                         </p>
                     </div>
 
                     {error && <div className="bg-red-50 text-red-500 p-4 rounded-2xl mb-8 text-xs font-bold border border-red-100">{error}</div>}
 
-                    <form onSubmit={handleAuth} className="space-y-6">
+                    <form onSubmit={handleAuth} className="space-y-5">
                         {!isLogin && (
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Identity Name</label>
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Full Identity Name</label>
                                 <div className="relative">
-                                    <User className="absolute left-4 top-4 w-5 h-5 text-gray-300" />
+                                    <User className="absolute left-4 top-3.5 w-4.5 h-4.5 text-gray-300" />
                                     <input
                                         type="text"
-                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-gray-700"
+                                        className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border-2 border-gray-50 rounded-xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-sm text-gray-700"
                                         placeholder="Enter your name"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
@@ -137,13 +137,13 @@ const LoginPage = () => {
                                 </div>
                             </div>
                         )}
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Secure Email Address</label>
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Secure Email Address</label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-4 w-5 h-5 text-gray-300" />
+                                <Mail className="absolute left-4 top-3.5 w-4.5 h-4.5 text-gray-300" />
                                 <input
                                     type="email"
-                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-gray-700"
+                                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border-2 border-gray-50 rounded-xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-sm text-gray-700"
                                     placeholder="email@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -151,13 +151,13 @@ const LoginPage = () => {
                                 />
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Access Password</label>
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] font-black text-gray-400 uppercase tracking-[0.15em] ml-1">Access Password</label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-4 w-5 h-5 text-gray-300" />
+                                <Lock className="absolute left-4 top-3.5 w-4.5 h-4.5 text-gray-300" />
                                 <input
                                     type="password"
-                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-50 rounded-2xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-gray-700"
+                                    className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border-2 border-gray-50 rounded-xl focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-sm text-gray-700"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -169,10 +169,10 @@ const LoginPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-teal-600 text-white p-5 rounded-[2.5rem] text-lg font-black uppercase tracking-widest shadow-2xl shadow-teal-500/20 hover:bg-teal-800 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-3 mt-10 disabled:opacity-50"
+                            className="w-full bg-teal-600 text-white py-4 rounded-[1.5rem] text-base font-black uppercase tracking-widest shadow-xl shadow-teal-500/20 hover:bg-teal-800 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2.5 mt-6 disabled:opacity-50"
                         >
                             {loading ? 'Verifying...' : (isLogin ? 'Sign In' : 'Get Started')}
-                            {!loading && <ChevronRight className="w-5 h-5" />}
+                            {!loading && <ChevronRight className="w-4.5 h-4.5" />}
                         </button>
                     </form>
 

@@ -77,7 +77,7 @@ const PatientDashboard = () => {
                     <div className="bg-[#0f766e] p-2 rounded-xl shadow-lg shadow-teal-500/20">
                         <Plus className="text-white w-5 h-5 rotate-45" />
                     </div>
-                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">MedPreserve</h2>
+                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">SwasthyaKosh</h2>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-1.5">
@@ -303,8 +303,8 @@ const SidebarNavItem = ({ icon, label, active, onClick }) => (
     <button
         onClick={onClick}
         className={`w-full flex items-center gap-4 px-5 py-3.5 transition-all rounded-2xl font-bold text-sm ${active
-                ? 'sidebar-active shadow-md shadow-teal-500/10'
-                : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600 uppercase tracking-wider text-[11px]'
+            ? 'sidebar-active shadow-md shadow-teal-500/10'
+            : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600 uppercase tracking-wider text-[11px]'
             }`}
     >
         <span className={active ? 'text-[#0f766e]' : 'text-gray-300'}>{React.cloneElement(icon, { size: 22, strokeWidth: active ? 2.5 : 2 })}</span>

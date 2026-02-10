@@ -36,7 +36,7 @@ const HospitalDashboard = () => {
                     <div className="bg-[#2563eb] p-2 rounded-xl shadow-lg shadow-blue-500/20">
                         <Plus className="text-white w-5 h-5 rotate-45" />
                     </div>
-                    <h2 className="text-xl font-black text-[#1e293b] tracking-tight">MedPreserve</h2>
+                    <h2 className="text-xl font-black text-[#1e293b] tracking-tight">SwasthyaKosh</h2>
                 </div>
 
                 <nav className="flex-1 px-6 space-y-2">
@@ -206,8 +206,8 @@ const SidebarNavItem = ({ icon, label, active, onClick }) => (
     <button
         onClick={onClick}
         className={`w-full flex items-center gap-4 px-5 py-4 transition-all rounded-[1.25rem] font-black text-[11px] uppercase tracking-[0.1em] ${active
-                ? 'bg-[#eff6ff] text-[#2563eb] shadow-xl shadow-blue-500/5'
-                : 'text-gray-400 hover:bg-[#f8fafc] hover:text-gray-600'
+            ? 'bg-[#eff6ff] text-[#2563eb] shadow-xl shadow-blue-500/5'
+            : 'text-gray-400 hover:bg-[#f8fafc] hover:text-gray-600'
             }`}
     >
         <span className={active ? 'text-[#2563eb]' : 'text-gray-300'}>{React.cloneElement(icon, { size: 20, strokeWidth: active ? 3 : 2.5 })}</span>
@@ -229,8 +229,8 @@ const StatCard2 = ({ label, value, trend, icon, color }) => {
                     {React.cloneElement(icon, { size: 24, strokeWidth: 3 })}
                 </div>
                 <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase border ${trend.includes('+') ? 'text-[#16a34a] bg-[#f0fdf4] border-[#dcfce7]' :
-                        trend.includes('-') ? 'text-[#dc2626] bg-[#fef2f2] border-[#fee2e2]' :
-                            'text-gray-400 bg-gray-50 border-gray-100'
+                    trend.includes('-') ? 'text-[#dc2626] bg-[#fef2f2] border-[#fee2e2]' :
+                        'text-gray-400 bg-gray-50 border-gray-100'
                     }`}>
                     {trend}
                 </div>
