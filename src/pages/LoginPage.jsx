@@ -4,7 +4,7 @@ import { auth, db } from '../lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LoginPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -23,6 +23,8 @@ const LoginPage = () => {
 
         try {
             if (isLogin) {
+                // In a real app, email might be an Aadhaar ID, but we'll stick to Firebase Email/Pass for now
+                // Unless there's logic to convert Aadhaar to email
                 await signInWithEmailAndPassword(auth, email, password);
                 navigate(`/${role}`);
             } else {
@@ -66,7 +68,16 @@ const LoginPage = () => {
                 <div className="relative z-10 max-w-lg">
                     <div className="mb-8 opacity-40">
                         <svg className="w-full h-auto" fill="none" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 50 L120 50 L140 10 L170 90 L200 30 L220 70 L240 50 L400 50" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"></path>
+                            <motion.path
+                                initial={{ pathLength: 0, opacity: 0 }}
+                                animate={{ pathLength: 1, opacity: 1 }}
+                                transition={{ duration: 2, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+                                d="M0 50 L120 50 L140 10 L170 90 L200 30 L220 70 L240 50 L400 50"
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="3"
+                            />
                         </svg>
                     </div>
                     <h1 className="text-5xl font-800 leading-tight mb-6">The future of medical records.</h1>
@@ -128,6 +139,7 @@ const LoginPage = () => {
                     {/* Role Tabs */}
                     <div className="flex bg-slate-100 p-1.5 rounded-xl mb-10">
                         <button
+                            type="button"
                             onClick={() => setRole('patient')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-700 transition-all ${role === 'patient' ? 'bg-white shadow-sm text-[var(--deep-teal)]' : 'text-slate-500 hover:text-slate-700'}`}
                         >
@@ -135,6 +147,7 @@ const LoginPage = () => {
                             PATIENT
                         </button>
                         <button
+                            type="button"
                             onClick={() => setRole('hospital')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-700 transition-all ${role === 'hospital' ? 'bg-white shadow-sm text-[var(--deep-teal)]' : 'text-slate-500 hover:text-slate-700'}`}
                         >
@@ -152,7 +165,7 @@ const LoginPage = () => {
 
                     <form onSubmit={handleAuth} className="space-y-6">
                         {!isLogin && (
-                            <div>
+                            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
                                 <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -167,12 +180,12 @@ const LoginPage = () => {
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-                            </div>
+                            </motion.div>
                         )}
 
                         <div>
                             <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2">
-                                {role === 'patient' ? 'Aadhaar ID (or Email)' : 'Hospital ID (or Email)'}
+                                {role === 'patient' ? 'Aadhaar ID' : 'Hospital ID / License Number'}
                             </label>
                             <div className="relative group">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -184,7 +197,7 @@ const LoginPage = () => {
                                     type="text"
                                     required
                                     className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                    placeholder={role === 'patient' ? "XXXX XXXX XXXX or email@ex.com" : "HOSP-789-XXX or email@hosp.com"}
+                                    placeholder={role === 'patient' ? "XXXX XXXX XXXX" : "HOSP-789-XXX"}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -249,3 +262,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
