@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { auth, db } from '../lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Lock, LogIn, UserPlus, Activity, ShieldAlert } from 'lucide-react';
 
 const LoginPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -23,8 +23,6 @@ const LoginPage = () => {
 
         try {
             if (isLogin) {
-                // For this prototype, we'll assume the input (Aadhaar/HospID) is used as an identifier
-                // In a production app, you'd map these to email or use a custom provider
                 await signInWithEmailAndPassword(auth, email, password);
                 navigate(`/${role}`);
             } else {
@@ -49,242 +47,240 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row h-screen overflow-hidden font-display">
-            {/* Left Column: Branding/Marketing */}
-            <div className="hidden lg:flex lg:w-1/2 bg-[var(--deep-teal)] relative flex-col justify-between p-12 text-white overflow-hidden">
-                <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-                    <img
-                        alt=""
-                        className="w-full h-full object-cover scale-150 rotate-12"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjIIWe_MPIwvRCQAbBreUmVqF9NEUVXRYRCePA0ASDNYNM00Dz4wLOZoYUpSUM1t3B5JYuQdeRCllbziymNplWfby8vQYJMIPpjYGyFQB6WI21XsFnzgwE0tuMZO0WNGxV1BoU9o2wjWO8h2cjIn9x5nXzTOAviCaDr2CoKikDuu0HIqwveJLzyN93zUzayHO2hBusmCka-CqPPfSJKpjQZGNH3V1pT4pMJ0NkMaUcjXvkV4q09f6ySU-gklj4hQnPuXV75owsCQ"
+        <div className="min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden bg-[#004d4d] font-sans selection:bg-purple-500/30">
+            {/* Background Radial Gradient */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#008080_0%,#004d4d_100%)] opacity-80" />
+
+            {/* ECG Pattern Overlay */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
+                <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                    <motion.path
+                        d="M0 500 L200 500 L220 450 L240 550 L260 400 L280 600 L300 500 L1000 500"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        initial={{ pathLength: 0, x: -1000 }}
+                        animate={{
+                            pathLength: [0, 1, 1],
+                            x: [-1000, 0, 1000]
+                        }}
+                        transition={{
+                            duration: 10,
+                            repeat: Infinity,
+                            ease: "linear"
+                        }}
                     />
-                </div>
-
-                <div className="relative z-10 flex items-center gap-3">
-                    <span className="material-symbols-outlined text-4xl">ecg</span>
-                    <span className="text-2xl font-800 tracking-tight">SwasthyaKosh</span>
-                </div>
-
-                <div className="relative z-10 max-w-lg">
-                    <div className="mb-8 opacity-40">
-                        <svg className="w-full h-auto" fill="none" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
-                            <motion.path
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                transition={{ duration: 2, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
-                                d="M0 50 L120 50 L140 10 L170 90 L200 30 L220 70 L240 50 L400 50"
-                                stroke="white"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="3"
-                            />
-                        </svg>
-                    </div>
-                    <h1 className="text-5xl font-800 leading-tight mb-6">The future of medical records.</h1>
-                    <p className="text-xl text-teal-50/80 mb-10 leading-relaxed">
-                        Your centralized health vault for storing and managing medical prescriptions with SwasthyaKosh security.
-                    </p>
-
-                    <div className="space-y-6">
-                        <div className="flex items-start gap-4">
-                            <div className="bg-white/10 p-2 rounded-lg">
-                                <span className="material-symbols-outlined">fingerprint</span>
-                            </div>
-                            <div>
-                                <h3 className="font-700 text-lg">Secure Patient Access</h3>
-                                <p className="text-teal-50/60 text-sm">Log in using your Aadhaar ID with encrypted authentication.</p>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-4">
-                            <div className="bg-white/10 p-2 rounded-lg">
-                                <span className="material-symbols-outlined">domain</span>
-                            </div>
-                            <div>
-                                <h3 className="font-700 text-lg">Hospital Infrastructure</h3>
-                                <p className="text-teal-50/60 text-sm">Professional dashboard for healthcare providers and clinical staff.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="relative z-10 flex items-center gap-8 text-[10px] font-700 uppercase tracking-[0.2em] opacity-60">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">verified_user</span>
-                        GOVT COMPLIANT
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">lock</span>
-                        AES-256 ENCRYPTED
-                    </div>
-                </div>
+                    <motion.path
+                        d="M0 500 L200 500 L220 450 L240 550 L260 400 L280 600 L300 500 L1000 500"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        initial={{ pathLength: 0, x: -1500 }}
+                        animate={{
+                            pathLength: [0, 1, 1],
+                            x: [-1500, -500, 500]
+                        }}
+                        transition={{
+                            duration: 10,
+                            repeat: Infinity,
+                            ease: "linear",
+                            delay: 5
+                        }}
+                    />
+                </svg>
             </div>
 
-            {/* Right Column: Auth Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white overflow-y-auto">
-                <div className="w-full max-w-[440px]">
-                    <div className="lg:hidden flex items-center gap-2 mb-8 text-[var(--deep-teal)]">
-                        <span className="material-symbols-outlined text-3xl">ecg</span>
-                        <span className="text-xl font-800">SwasthyaKosh</span>
-                    </div>
+            {/* Branding Section */}
+            <div className="relative z-10 flex flex-col items-center mb-8">
+                <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-purple-600 p-4 rounded-2xl shadow-xl shadow-purple-900/20 mb-4"
+                >
+                    <Activity className="text-white w-10 h-10" />
+                </motion.div>
+                <motion.h1
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="text-4xl font-black text-white tracking-tight mb-1"
+                >
+                    SwasthyaKosh
+                </motion.h1>
+                <motion.p
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-teal-100/60 font-medium text-sm tracking-wide"
+                >
+                    AI-Powered Digital Prescription Management
+                </motion.p>
+            </div>
 
-                    <div className="mb-8">
-                        <h2 className="text-5xl font-800 text-slate-900 tracking-tight mb-2">
-                            {isLogin ? 'Welcome back.' : 'Join the system.'}
-                        </h2>
-                        <p className="text-slate-500 font-500 text-sm uppercase tracking-widest">
-                            Access your SwasthyaKosh Portal
-                        </p>
-                    </div>
+            {/* Role Toggle Above Card */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="relative z-10 flex bg-white/10 backdrop-blur-md p-1 rounded-xl mb-6"
+            >
+                <button
+                    type="button"
+                    onClick={() => setRole('patient')}
+                    className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${role === 'patient' ? 'bg-white text-teal-950 shadow-sm' : 'text-teal-100/60 hover:text-white'}`}
+                >
+                    Patient
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setRole('hospital')}
+                    className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${role === 'hospital' ? 'bg-white text-teal-950 shadow-sm' : 'text-teal-100/60 hover:text-white'}`}
+                >
+                    Hospital
+                </button>
+            </motion.div>
 
-                    {/* Role Tabs */}
-                    <div className="tabs-container flex bg-slate-100 p-1.5 rounded-xl mb-10">
-                        <button
-                            type="button"
-                            onClick={() => setRole('patient')}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-700 transition-all ${role === 'patient' ? 'bg-white shadow-sm text-[var(--deep-teal)]' : 'text-slate-500 hover:text-slate-700'}`}
-                        >
-                            <span className="material-symbols-outlined text-lg">person</span>
-                            PATIENT
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setRole('hospital')}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-700 transition-all ${role === 'hospital' ? 'bg-white shadow-sm text-[var(--deep-teal)]' : 'text-slate-500 hover:text-slate-700'}`}
-                        >
-                            <span className="material-symbols-outlined text-lg">local_hospital</span>
-                            HOSPITAL
-                        </button>
-                    </div>
+            {/* Login Card */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative z-10 w-full max-w-[420px] bg-white rounded-[2.5rem] shadow-2xl p-10 mx-6"
+            >
+                {/* Tabs */}
+                <div className="flex bg-slate-100 p-1.5 rounded-2xl mb-8">
+                    <button
+                        onClick={() => setIsLogin(true)}
+                        className={`flex-1 py-3.5 rounded-xl text-sm font-bold transition-all ${isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}
+                    >
+                        Sign In
+                    </button>
+                    <button
+                        onClick={() => setIsLogin(false)}
+                        className={`flex-1 py-3.5 rounded-xl text-sm font-bold transition-all ${!isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}
+                    >
+                        Sign Up
+                    </button>
+                </div>
 
+                <form onSubmit={handleAuth} className="space-y-6">
                     <AnimatePresence mode="wait">
                         {error && (
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-xs font-700 border border-red-100 flex items-center gap-2"
+                                className="bg-red-50 text-red-500 p-4 rounded-2xl mb-2 text-xs font-bold border border-red-100 flex items-center gap-2"
                             >
-                                <span className="material-symbols-outlined text-lg">error</span>
+                                <ShieldAlert className="w-4 h-4" />
                                 {error}
                             </motion.div>
                         )}
                     </AnimatePresence>
 
-                    <form onSubmit={handleAuth} className="form-container space-y-6">
-                        {!isLogin && (
-                            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-                                <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">person</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                        placeholder="John Doe"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </div>
-                            </motion.div>
-                        )}
-
-                        <div className="fields-gate">
-                            {role === 'patient' ? (
-                                <motion.div key="patient" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                    <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2" htmlFor="aadhaar">Aadhaar ID</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                            <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">fingerprint</span>
-                                        </div>
-                                        <input
-                                            className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                            id="aadhaar"
-                                            maxLength="14"
-                                            name="aadhaar"
-                                            placeholder="XXXX XXXX XXXX"
-                                            type="text"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <motion.div key="hospital" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                    <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2" htmlFor="hospital_id">Hospital ID / License Number</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                            <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">badge</span>
-                                        </div>
-                                        <input
-                                            className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                            id="hospital_id"
-                                            name="hospital_id"
-                                            placeholder="HOSP-789-XXX"
-                                            type="text"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                    </div>
-                                </motion.div>
-                            )}
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest" htmlFor="password">Password</label>
-                                <button type="button" className="text-xs font-700 text-[var(--primary-teal)] hover:underline">Forgot?</button>
-                            </div>
+                    {!isLogin && (
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Full Name</label>
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">lock</span>
-                                </div>
+                                <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-purple-600 transition-colors" />
                                 <input
-                                    className="block w-full pl-12 pr-12 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                    id="password"
-                                    name="password"
-                                    placeholder="••••••••"
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    type="text"
+                                    required
+                                    placeholder="John Doe"
+                                    className="w-full bg-slate-50 border-2 border-slate-50 p-4 pl-12 rounded-2xl focus:border-purple-600/20 focus:bg-white outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300 text-sm"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
-                                <button className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600" type="button">
-                                    <span className="material-symbols-outlined text-xl">visibility</span>
-                                </button>
                             </div>
                         </div>
+                    )}
 
-                        <button
-                            className="w-full flex items-center justify-center gap-3 bg-[var(--primary-teal)] hover:bg-[var(--deep-teal)] text-white font-800 py-4 rounded-xl transition-all shadow-lg shadow-teal-700/20 active:scale-[0.99] uppercase tracking-widest text-sm disabled:opacity-50"
-                            type="submit"
-                            disabled={loading}
-                        >
-                            {loading ? 'Processing...' : (isLogin ? 'SIGN IN' : 'GET STARTED')}
-                            {!loading && <span className="material-symbols-outlined text-lg">login</span>}
-                        </button>
-                    </form>
-
-                    <div className="mt-8 text-center">
-                        <p className="text-slate-500 text-sm font-500">
-                            {isLogin ? 'New to SwasthyaKosh?' : 'Already have an account?'}
-                            <button
-                                onClick={() => setIsLogin(!isLogin)}
-                                className="ml-2 text-[var(--primary-teal)] font-800 hover:underline"
-                            >
-                                {isLogin ? 'Get Started' : 'Sign In'}
-                            </button>
-                        </p>
+                    <div className="space-y-2">
+                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Email Address</label>
+                        <div className="relative group">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-purple-600 transition-colors" />
+                            <input
+                                type="email"
+                                required
+                                placeholder="you@example.com"
+                                className="w-full bg-slate-50 border-2 border-slate-50 p-4 pl-12 rounded-2xl focus:border-purple-600/20 focus:bg-white outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300 text-sm"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
                     </div>
 
-                    <div className="lg:hidden mt-8 pt-8 border-t border-slate-100">
-                        <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border-2 border-slate-100 rounded-xl hover:bg-slate-50 transition-colors text-sm font-700 text-slate-700">
-                            <img alt="" className="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZnpJMM2Rb5eLlgECd1rQt-Wx_V6YvSMGWlUte42vID8-8gVXPWBilB_YfO5n8K8TdimRS16OfVquCNoEv-rRVc991d030DeE7alR1FOt4JSGdIJ29Wr0Ych9shB2b1KRB6d0NwEmuddumZgxOSAzls-8vihas46TJcw74oPCkif7ca_xg23vnyZyKesw2vDLUlRSZ-bxEZTTqrqaUFi-XZ863rCIOl2mDNxnm2Pn5t487APMRCt-zpqe9uMiIOtTXt1uKSTojAg" />
-                            Continue with DigiLocker
-                        </button>
+                    <div className="space-y-2">
+                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.1em] ml-1">Password</label>
+                        <div className="relative group">
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-purple-600 transition-colors" />
+                            <input
+                                type="password"
+                                required
+                                placeholder="••••••••"
+                                className="w-full bg-slate-50 border-2 border-slate-50 p-4 pl-12 rounded-2xl focus:border-purple-600/20 focus:bg-white outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300 text-sm"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-purple-600 text-white p-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest shadow-xl shadow-purple-600/20 hover:bg-purple-700 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50 disabled:translate-y-0"
+                    >
+                        {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+                    </button>
+                </form>
+
+                <div className="mt-8 text-center">
+                    <button
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="text-slate-400 text-xs font-bold hover:text-purple-600 transition-colors"
+                    >
+                        {isLogin ? "Don't have an account? Create one" : "Already have an account? Sign in"}
+                    </button>
+                </div>
+            </motion.div>
+
+            {/* Demo Status Alert */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative z-10 mt-10 bg-amber-50/90 backdrop-blur-sm border border-amber-100 p-4 rounded-2xl max-w-[420px] mx-6"
+            >
+                <p className="text-[11px] text-amber-900/80 leading-relaxed text-center">
+                    <span className="font-black">Demo System:</span> This is a prototype for educational purposes. Do not enter real medical data or personal information.
+                </p>
+            </motion.div>
+
+            {/* Bottom-right BPM Widget */}
+            <motion.div
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="fixed bottom-8 right-8 hidden lg:flex items-center bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-3xl gap-6"
+            >
+                <div className="relative">
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-3 h-3 bg-teal-400 rounded-full"
+                    />
+                    <div className="w-10 h-[2px] bg-white/20 mt-2 rounded-full overflow-hidden">
+                        <motion.div
+                            animate={{ x: [-40, 40] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                            className="w-full h-full bg-teal-400"
+                        />
                     </div>
                 </div>
-            </div>
+                <div className="text-right">
+                    <p className="text-3xl font-black text-white leading-none">72</p>
+                    <p className="text-[10px] font-black text-teal-400 uppercase tracking-widest mt-1">BPM</p>
+                </div>
+            </motion.div>
         </div>
     );
 };
