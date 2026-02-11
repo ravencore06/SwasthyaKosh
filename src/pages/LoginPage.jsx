@@ -23,8 +23,8 @@ const LoginPage = () => {
 
         try {
             if (isLogin) {
-                // In a real app, email might be an Aadhaar ID, but we'll stick to Firebase Email/Pass for now
-                // Unless there's logic to convert Aadhaar to email
+                // For this prototype, we'll assume the input (Aadhaar/HospID) is used as an identifier
+                // In a production app, you'd map these to email or use a custom provider
                 await signInWithEmailAndPassword(auth, email, password);
                 navigate(`/${role}`);
             } else {
@@ -127,7 +127,7 @@ const LoginPage = () => {
                         <span className="text-xl font-800">SwasthyaKosh</span>
                     </div>
 
-                    <div className="mb-8 font-display">
+                    <div className="mb-8">
                         <h2 className="text-5xl font-800 text-slate-900 tracking-tight mb-2">
                             {isLogin ? 'Welcome back.' : 'Join the system.'}
                         </h2>
@@ -137,7 +137,7 @@ const LoginPage = () => {
                     </div>
 
                     {/* Role Tabs */}
-                    <div className="flex bg-slate-100 p-1.5 rounded-xl mb-10">
+                    <div className="tabs-container flex bg-slate-100 p-1.5 rounded-xl mb-10">
                         <button
                             type="button"
                             onClick={() => setRole('patient')}
@@ -156,14 +156,21 @@ const LoginPage = () => {
                         </button>
                     </div>
 
-                    {error && (
-                        <div className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-xs font-700 border border-red-100 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-lg">error</span>
-                            {error}
-                        </div>
-                    )}
+                    <AnimatePresence mode="wait">
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-xs font-700 border border-red-100 flex items-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">error</span>
+                                {error}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-                    <form onSubmit={handleAuth} className="space-y-6">
+                    <form onSubmit={handleAuth} className="form-container space-y-6">
                         {!isLogin && (
                             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
                                 <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
@@ -183,30 +190,50 @@ const LoginPage = () => {
                             </motion.div>
                         )}
 
-                        <div>
-                            <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2">
-                                {role === 'patient' ? 'Aadhaar ID' : 'Hospital ID / License Number'}
-                            </label>
-                            <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">
-                                        {role === 'patient' ? 'fingerprint' : 'badge'}
-                                    </span>
-                                </div>
-                                <input
-                                    type="text"
-                                    required
-                                    className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
-                                    placeholder={role === 'patient' ? "XXXX XXXX XXXX" : "HOSP-789-XXX"}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
+                        <div className="fields-gate">
+                            {role === 'patient' ? (
+                                <motion.div key="patient" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                    <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2" htmlFor="aadhaar">Aadhaar ID</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">fingerprint</span>
+                                        </div>
+                                        <input
+                                            className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
+                                            id="aadhaar"
+                                            maxLength="14"
+                                            name="aadhaar"
+                                            placeholder="XXXX XXXX XXXX"
+                                            type="text"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div key="hospital" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                    <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest mb-2" htmlFor="hospital_id">Hospital ID / License Number</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">badge</span>
+                                        </div>
+                                        <input
+                                            className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
+                                            id="hospital_id"
+                                            name="hospital_id"
+                                            placeholder="HOSP-789-XXX"
+                                            type="text"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
 
                         <div>
                             <div className="flex justify-between items-center mb-2">
-                                <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest">Password</label>
+                                <label className="block text-xs font-800 text-slate-400 uppercase tracking-widest" htmlFor="password">Password</label>
                                 <button type="button" className="text-xs font-700 text-[var(--primary-teal)] hover:underline">Forgot?</button>
                             </div>
                             <div className="relative group">
@@ -214,10 +241,11 @@ const LoginPage = () => {
                                     <span className="material-symbols-outlined text-slate-400 text-xl group-focus-within:text-[var(--primary-teal)] transition-colors">lock</span>
                                 </div>
                                 <input
-                                    type="password"
-                                    required
                                     className="block w-full pl-12 pr-12 py-4 bg-slate-50 border-transparent rounded-xl focus:ring-2 focus:ring-[var(--primary-teal)] focus:bg-white text-slate-900 placeholder-slate-400 transition-all text-sm font-500 outline-none"
+                                    id="password"
+                                    name="password"
                                     placeholder="••••••••"
+                                    type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -228,11 +256,11 @@ const LoginPage = () => {
                         </div>
 
                         <button
+                            className="w-full flex items-center justify-center gap-3 bg-[var(--primary-teal)] hover:bg-[var(--deep-teal)] text-white font-800 py-4 rounded-xl transition-all shadow-lg shadow-teal-700/20 active:scale-[0.99] uppercase tracking-widest text-sm disabled:opacity-50"
                             type="submit"
                             disabled={loading}
-                            className="w-full flex items-center justify-center gap-3 bg-[var(--primary-teal)] hover:bg-[var(--deep-teal)] text-white font-800 py-4 rounded-xl transition-all shadow-lg shadow-teal-700/20 active:scale-[0.99] uppercase tracking-widest text-sm disabled:opacity-50"
                         >
-                            {loading ? (isLogin ? 'Signing In...' : 'Joining...') : (isLogin ? 'SIGN IN' : 'GET STARTED')}
+                            {loading ? 'Processing...' : (isLogin ? 'SIGN IN' : 'GET STARTED')}
                             {!loading && <span className="material-symbols-outlined text-lg">login</span>}
                         </button>
                     </form>
@@ -262,4 +290,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
