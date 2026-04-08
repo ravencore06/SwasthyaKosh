@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Key, IdCard, ArrowRight, Lock, ShieldCheck, User, Hospital } from 'lucide-react';
+import { Shield, Key, IdCard, ArrowRight, Lock, ShieldCheck, User, Hospital, Mail } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
@@ -94,14 +94,14 @@ const Login = () => {
             {error && <div className="error-alert">{error}</div>}
             
             <div className="input-group">
-              <label>Aadhaar ID / Health ID</label>
+              <label>Email ID</label>
               <div className="input-wrapper">
-                <IdCard size={20} className="input-icon" />
+                <Mail size={20} className="input-icon" />
                 <input 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="XXXX - XXXX - XXXX"
+                  placeholder="name@example.com"
                   required
                 />
               </div>
