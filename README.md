@@ -1,4 +1,4 @@
- SwasthyaKosh
+SWASTHYAKOSH
 
 SwasthyaKosh is a centralized digital platform for storing and managing medical prescriptions and health records securely.
 
