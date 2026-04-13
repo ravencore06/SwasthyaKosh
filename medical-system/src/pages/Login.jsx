@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Shield, Key, IdCard, ArrowRight, Lock, ShieldCheck, User, Hospital, Mail } from 'lucide-react';
+import CircularText from '../components/CircularText';
 import './Login.css';
 
 const Login = () => {
@@ -45,14 +46,16 @@ const Login = () => {
   return (
     <div className="login-wrapper">
       <div className="login-left">
-        <div className="brand-header">
-          <div className="logo-box">
-            <Shield size={24} color="var(--primary-color)" />
+        <div className="brand-header" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '380px' }}>
+          <div className="circular-badge-container">
+            <CircularText size={400} radius={90} text="Safe records--Appointments--Diagnosis--Guide--" />
           </div>
-          <span className="brand-name">SwasthyaKosh</span>
+          <img src="/src/assets/ash_brush_bg.png" alt="Ash Paint Background" style={{ width: '450px', position: 'absolute', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1 }} />
+          <img src="/src/assets/brush_logo.png" alt="SwasthyaKosh Brush Logo" style={{ width: '380px', objectFit: 'contain', mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.2) contrast(1.5)', position: 'relative', zIndex: 2 }} />
         </div>
         
         <div className="hero-content">
+          <div className="hero-brand-label" style={{ color: '#5C4033', fontWeight: '900', letterSpacing: '5px', textTransform: 'uppercase', fontSize: '28px', marginBottom: '16px' }}>SwasthyKosh</div>
           <h1 className="hero-title">The Future of Secure Health Records.</h1>
           <p className="hero-subtitle">
             A high-end, secure digital vault for all your medical

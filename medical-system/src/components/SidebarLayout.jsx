@@ -33,8 +33,8 @@ export const SidebarLayout = ({ children, title }) => {
   return (
     <div className={`layout-container ${themeClass}`}>
       <aside className="sidebar glass-panel">
-        <div className="sidebar-header">
-           <h2>{role === 'patient' ? 'Patient Portal' : 'Hospital Portal'}</h2>
+        <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+           <img src="/src/assets/brush_logo.png" alt="SwasthyaKosh Brush Logo" style={{ width: '220px', height: 'auto', objectFit: 'contain', mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.2) contrast(1.5)' }} />
         </div>
         
         <div className="user-profile">

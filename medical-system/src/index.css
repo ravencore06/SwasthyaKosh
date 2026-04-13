@@ -1,22 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
 
 :root {
   /* Colors */
-  --bg-color: #f8fafc;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --text-primary: #1f2937;
-  --text-secondary: #64748b;
-  --primary-color: #0d4a40; /* Dark forest green */
-  --primary-dark: #093b33;
-  --primary-light: #a7d9d6; /* Soft cyan */
+  --bg-color: #fdfbf7;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --text-primary: #2a2a2a;
+  --text-secondary: #5c5c5c;
+  --primary-color: #c49a51; /* Vibrant Gold/Ochre */
+  --primary-dark: #a17835;
+  --primary-light: #e8dcc6; /* Soft cream gold */
   --success-color: #10b981;
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
   
   /* Hospital Theme Specific */
-  --hospital-color: #0d4a40; 
-  --hospital-dark: #093b33;
-  --hospital-light: #f1f5f9;
+  --hospital-color: #c49a51; 
+  --hospital-dark: #a17835;
+  --hospital-light: #fdfbf7;
   
   /* UI Elements */
   --border-radius: 16px;
@@ -36,9 +36,8 @@
 }
 
 body {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 600;
+  font-family: 'Bodoni Moda', serif;
+  font-weight: 500;
   background-color: var(--bg-color);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
