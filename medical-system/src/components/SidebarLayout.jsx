@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Calendar, FileText, Settings, LogOut, LayoutDashboard, UserSquare2, ShieldAlert } from 'lucide-react';
+import CircularText from './CircularText';
 import './Sidebar.css';
 
 export const SidebarLayout = ({ children, title }) => {
@@ -33,8 +34,13 @@ export const SidebarLayout = ({ children, title }) => {
   return (
     <div className={`layout-container ${themeClass}`}>
       <aside className="sidebar glass-panel">
-        <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-           <img src="/src/assets/brush_logo.png" alt="SwasthyaKosh Brush Logo" style={{ width: '220px', height: 'auto', objectFit: 'contain', mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.2) contrast(1.5)' }} />
+        <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '32px', paddingTop: '32px' }}>
+          <div style={{ position: 'relative', width: '150px', height: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ position: 'absolute', color: '#000000', opacity: 0.85 }}>
+              <CircularText size={170} radius={90} text="SWASTHYAKOSH • MEDICAL PORTAL • " />
+            </div>
+            <img src="/src/assets/brush_logo.png" alt="SwasthyaKosh Brush Logo" style={{ width: '90px', objectFit: 'contain', mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.1) contrast(1.5)', zIndex: 2, position: 'relative' }} />
+          </div>
         </div>
         
         <div className="user-profile">

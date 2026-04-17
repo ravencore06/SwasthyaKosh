@@ -55,7 +55,7 @@ const Login = () => {
         </div>
         
         <div className="hero-content">
-          <div className="hero-brand-label" style={{ color: '#5C4033', fontWeight: '900', letterSpacing: '5px', textTransform: 'uppercase', fontSize: '28px', marginBottom: '16px' }}>SwasthyKosh</div>
+          <div className="hero-brand-label" style={{ fontFamily: "'Borgen', 'Outfit', sans-serif", color: '#5C4033', fontWeight: '900', letterSpacing: '5px', textTransform: 'uppercase', fontSize: '28px', marginBottom: '16px' }}>SwasthyaKosh</div>
           <h1 className="hero-title">The Future of Secure Health Records.</h1>
           <p className="hero-subtitle">
             A high-end, secure digital vault for all your medical

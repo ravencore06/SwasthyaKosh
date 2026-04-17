@@ -14,6 +14,7 @@
   justify-content: space-between;
   position: relative;
   overflow: hidden;
+  font-family: 'Bodoni Moda', serif;
 }
 
 .circular-badge-container {
@@ -129,7 +130,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px; /* For icons if added later, currently removed */
+  gap: 8px;
+  /* For icons if added later, currently removed */
 }
 
 .role-tab.active {
@@ -219,7 +221,8 @@
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #92cdc9; /* slightly darker cyan */
+  background: #92cdc9;
+  /* slightly darker cyan */
 }
 
 .register-prompt {
@@ -254,17 +257,21 @@
   .login-wrapper {
     flex-direction: column;
   }
+
   .login-left {
     width: 100%;
     padding: 2rem;
   }
+
   .hero-content {
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
+
   .hero-title {
     font-size: 2.5rem;
   }
+
   .login-right {
     width: 100%;
   }

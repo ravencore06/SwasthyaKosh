@@ -1,10 +1,10 @@
 import React from 'react';
 
-const CircularText = ({ 
-  text = "SWASTHYAKOSH • SECURE RECORDS • SWASTHYAKOSH • SECURE RECORDS • ", 
-  size = 180, 
+const CircularText = ({
+  text = "SWASTHYAKOSH • SECURE RECORDS • SWASTHYAKOSH • SECURE RECORDS • ",
+  size = 180,
   radius = 125,
-  color = "currentColor" 
+  color = "currentColor"
 }) => {
   const cx = 125.25;
   const cy = 125.25;
@@ -22,36 +22,36 @@ const CircularText = ({
           }
         `}
       </style>
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width={size} 
-        height={size} 
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
         viewBox="0 0 250.5 250.5"
-        style={{ 
-          animation: 'spin-circle 25s linear infinite', 
-          color: color, 
-          overflow: 'visible' 
+        style={{
+          animation: 'spin-circle 25s linear infinite',
+          color: color,
+          overflow: 'visible'
         }}
       >
-        <path 
-          d={pathData} 
-          id="custom-circular-path" 
+        <path
+          d={pathData}
+          id="custom-circular-path"
           fill="none"
         ></path>
-        <text 
-          style={{ 
-            fontSize: '19px', 
-            fontWeight: '600', 
-            letterSpacing: '5px', 
-            fill: 'currentColor', 
-            fontFamily: 'inherit' 
+        <text
+          style={{
+            fontSize: '19px',
+            fontWeight: '600',
+            letterSpacing: '5px',
+            fill: 'currentColor',
+            fontFamily: "'Bodoni Moda', serif"
           }}
         >
           <textPath href="#custom-circular-path" startOffset="0%">
-            {text.split(/(swasthyakosh)/i).map((part, index) => 
-               part.toLowerCase() === 'swasthyakosh' ? 
-                 <tspan key={index} style={{ fill: 'brown', fontWeight: '800' }}>{part}</tspan> : 
-                 part
+            {text.split(/(swasthyakosh)/i).map((part, index) =>
+              part.toLowerCase() === 'swasthyakosh' ?
+                <tspan key={index} style={{ fill: 'brown', fontWeight: '800' }}>{part}</tspan> :
+                part
             )}
           </textPath>
         </text>

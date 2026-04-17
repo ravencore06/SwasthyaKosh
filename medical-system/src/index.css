@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap');
 
 :root {
   /* Colors */
@@ -6,22 +6,24 @@
   --bg-card: rgba(255, 255, 255, 0.9);
   --text-primary: #2a2a2a;
   --text-secondary: #5c5c5c;
-  --primary-color: #c49a51; /* Vibrant Gold/Ochre */
+  --primary-color: #c49a51;
+  /* Vibrant Gold/Ochre */
   --primary-dark: #a17835;
-  --primary-light: #e8dcc6; /* Soft cream gold */
+  --primary-light: #e8dcc6;
+  /* Soft cream gold */
   --success-color: #10b981;
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
-  
+
   /* Hospital Theme Specific */
-  --hospital-color: #c49a51; 
+  --hospital-color: #c49a51;
   --hospital-dark: #a17835;
   --hospital-light: #fdfbf7;
-  
+
   /* UI Elements */
   --border-radius: 16px;
   --border-color: #e2e8f0;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -36,7 +38,7 @@
 }
 
 body {
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Aribau Grotesk', 'Hanken Grotesk', sans-serif;
   font-weight: 500;
   background-color: var(--bg-color);
   color: var(--text-primary);
@@ -68,8 +70,15 @@ button {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -77,22 +86,67 @@ button {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Utilities */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.text-center { text-align: center; }
+.flex {
+  display: flex;
+}
 
-h1, h2, h3, h4, h5, h6 {
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-primary);
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -111,11 +165,28 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.badge-success { background: #d1fae5; color: #065f46; }
-.badge-warning { background: #fef3c7; color: #92400e; }
-.badge-danger { background: #fee2e2; color: #991b1b; }
-.badge-primary { background: var(--primary-light); color: var(--primary-dark); }
+.badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
 
-input, select, textarea {
+.badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+input,
+select,
+textarea {
   font-family: inherit;
 }
