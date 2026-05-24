@@ -33,4 +33,3 @@ SwasthyaKosh creates a unified digital health repository for each individual, en
 👤 **Author**
 
 **Srinidhi Sadhanala**  
-*B.Tech Student*
