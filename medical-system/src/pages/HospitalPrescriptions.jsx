@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { SidebarLayout } from '../components/SidebarLayout';
 import { dbService } from '../services/db';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { PlusCircle, Search, Cpu } from 'lucide-react';
 
 const HospitalPrescriptions = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [patientId, setPatientId] = useState('');
   const [medications, setMedications] = useState('');
   const [notes, setNotes] = useState('');
@@ -39,13 +41,13 @@ const HospitalPrescriptions = () => {
         notes
       };
       await dbService.createPrescription(rxData);
-      setMessage('Prescription successfully created and securely linked to patient.');
+      setMessage(t('hospital.prescriptions.success_msg'));
       setPatientId('');
       setMedications('');
       setNotes('');
       setAiInsight('');
     } catch (err) {
-      setMessage('Error creating prescription.');
+      setMessage(t('hospital.prescriptions.error_msg'));
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setMessage(''), 4000);
@@ -53,10 +55,10 @@ const HospitalPrescriptions = () => {
   };
 
   return (
-    <SidebarLayout title="Manage Prescriptions">
+    <SidebarLayout title={t('hospital.prescriptions.title')}>
       <div className="glass-panel" style={{ padding: '32px', maxWidth: '800px' }}>
         <h3 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <PlusCircle color="var(--hospital-color)" /> Create New Prescription
+          <PlusCircle color="var(--hospital-color)" /> {t('hospital.prescriptions.create_new')}
         </h3>
         
         {message && (
@@ -67,7 +69,7 @@ const HospitalPrescriptions = () => {
 
         <form onSubmit={handleSubmit} className="flex-col" style={{ gap: '20px' }}>
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Patient ID / Email</label>
+            <label>{t('hospital.prescriptions.patient_id')}</label>
             <div className="flex" style={{ gap: '8px' }}>
               <input 
                 type="text" 
@@ -75,7 +77,7 @@ const HospitalPrescriptions = () => {
                 onChange={e => setPatientId(e.target.value)} 
                 required 
                 className="input-hospital w-full"
-                placeholder="e.g. p1"
+                placeholder={t('hospital.prescriptions.patient_placeholder')}
               />
               <button type="button" className="badge badge-primary" style={{ border: 'none', cursor: 'pointer', padding: '0 16px' }}>
                 <Search size={18} />
@@ -84,14 +86,14 @@ const HospitalPrescriptions = () => {
           </div>
 
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Medications (comma separated)</label>
+            <label>{t('hospital.prescriptions.medications')}</label>
             <textarea 
               value={medications}
               onChange={e => setMedications(e.target.value)}
               required
               className="input-hospital w-full"
               style={{ padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', minHeight: '80px', fontFamily: 'inherit' }}
-              placeholder="Amoxicillin 500mg, Ibuprofen 400mg"
+              placeholder={t('hospital.prescriptions.meds_placeholder')}
             />
           </div>
 
@@ -103,18 +105,18 @@ const HospitalPrescriptions = () => {
               className="badge"
               style={{ background: '#f3e8ff', color: '#7e22ce', border: '1px solid #d8b4fe', cursor: 'pointer', padding: '8px 16px', display: 'flex', gap: '8px', alignItems: 'center' }}
             >
-              <Cpu size={16} /> {isAnalyzing ? 'Analyzing...' : 'AI Drug Interaction Check'}
+              <Cpu size={16} /> {isAnalyzing ? t('hospital.prescriptions.analyzing') : t('hospital.prescriptions.ai_check')}
             </button>
           </div>
 
           {aiInsight && (
             <div className="animate-fade-in" style={{ padding: '16px', background: '#f8fafc', borderLeft: '4px solid #8b5cf6', borderRadius: '8px' }}>
-              <strong>AI Insight:</strong> {aiInsight}
+              <strong>{t('hospital.prescriptions.ai_insight')}</strong> {aiInsight}
             </div>
           )}
 
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Doctor's Notes</label>
+            <label>{t('hospital.prescriptions.doctors_notes')}</label>
             <textarea 
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -129,7 +131,7 @@ const HospitalPrescriptions = () => {
              disabled={isSubmitting}
              style={{ marginTop: '12px' }}
           >
-            {isSubmitting ? 'Securing & Saving...' : 'Issue Prescription'}
+            {isSubmitting ? t('hospital.prescriptions.securing') : t('hospital.prescriptions.issue')}
           </button>
         </form>
       </div>

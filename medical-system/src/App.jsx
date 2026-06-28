@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Login from './pages/Login';
 
@@ -19,9 +20,10 @@ import SettingsModule from './pages/SettingsModule';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
+    <LanguageProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
           <Route path="/login" element={<Login />} />
           
           {/* Patient Routes */}
@@ -45,6 +47,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </LanguageProvider>
   );
 }
 
