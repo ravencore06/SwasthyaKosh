@@ -91,6 +91,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  position: relative;
 }
 
 .login-form-container {
@@ -251,6 +252,42 @@
 
 .legal-links a:hover {
   color: var(--text-primary);
+}
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-dark);
+  font-size: 0.85rem;
+}
+
+.language-select {
+  background: transparent;
+  border: 1px solid var(--primary-light);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--primary-dark);
+  cursor: pointer;
+  outline: none;
+}
+
+.language-select option {
+  background: #fdfbf7;
+  color: #5c4033;
+}
+
+.language-select:focus {
+  border-color: var(--primary-color);
+}
+
+.login-lang-switcher {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 10;
 }
 
 @media (max-width: 900px) {

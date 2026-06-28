@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { SidebarLayout } from '../components/SidebarLayout';
 import { dbService } from '../services/db';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Users, Calendar, Activity } from 'lucide-react';
 
 const HospitalDashboard = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,16 +29,16 @@ const HospitalDashboard = () => {
     fetchData();
   }, [user]);
 
-  if (loading) return <SidebarLayout title="Loading.."><div className="animate-pulse">Fetching hospital data...</div></SidebarLayout>;
+  if (loading) return <SidebarLayout title={t('hospital.dashboard.loading_title')}><div className="animate-pulse">{t('hospital.dashboard.loading_text')}</div></SidebarLayout>;
 
   const pendingRequests = appointments.filter(a => a.status === 'pending').length;
 
   return (
-    <SidebarLayout title="Hospital Overview">
+    <SidebarLayout title={t('hospital.dashboard.title')}>
       <div className="grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div className="glass-panel stat-card">
           <div className="flex justify-between items-center">
-            <span className="stat-card-title">Pending Requests</span>
+            <span className="stat-card-title">{t('hospital.dashboard.pending_requests')}</span>
             <Calendar size={24} color="var(--warning-color)" />
           </div>
           <span className="stat-card-value">{pendingRequests}</span>
@@ -44,7 +46,7 @@ const HospitalDashboard = () => {
         
         <div className="glass-panel stat-card">
           <div className="flex justify-between items-center">
-             <span className="stat-card-title">Active Doctors</span>
+             <span className="stat-card-title">{t('hospital.dashboard.active_doctors')}</span>
              <Users size={24} color="var(--hospital-color)" />
           </div>
           <span className="stat-card-value">{doctors.length}</span>
@@ -52,15 +54,15 @@ const HospitalDashboard = () => {
 
         <div className="glass-panel stat-card">
           <div className="flex justify-between items-center">
-             <span className="stat-card-title">System Load</span>
+             <span className="stat-card-title">{t('hospital.dashboard.system_load')}</span>
              <Activity size={24} color="var(--success-color)" />
           </div>
-          <span className="stat-card-value">Normal</span>
+          <span className="stat-card-value">{t('hospital.dashboard.load_value')}</span>
         </div>
       </div>
 
       <div style={{ marginTop: '32px' }}>
-        <h2>Available Doctors</h2>
+        <h2>{t('hospital.dashboard.available_doctors')}</h2>
         <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '16px' }}>
           {doctors.map(doc => (
             <div key={doc.id} className="glass-panel" style={{ padding: '24px' }}>

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { SidebarLayout } from '../components/SidebarLayout';
 import { dbService } from '../services/db';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Calendar } from 'lucide-react';
 
 const PatientAppointments = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [appointments, setAppointments] = useState([]);
   
   useEffect(() => {
@@ -13,7 +15,7 @@ const PatientAppointments = () => {
   }, [user]);
 
   return (
-    <SidebarLayout title="My Appointments">
+    <SidebarLayout title={t('patient.appointments.title')}>
       <div className="flex-col" style={{ gap: '16px' }}>
         {appointments.map(ap => (
           <div key={ap.id} className="glass-panel" style={{ padding: '24px' }}>
@@ -29,7 +31,7 @@ const PatientAppointments = () => {
                   {ap.status}
                 </div>
              </div>
-             <p style={{ marginTop: '16px' }}><strong>Reason:</strong> {ap.reason}</p>
+             <p style={{ marginTop: '16px' }}><strong>{t('patient.appointments.reason')}</strong> {ap.reason}</p>
           </div>
         ))}
       </div>

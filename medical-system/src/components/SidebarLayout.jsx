@@ -1,12 +1,14 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Calendar, FileText, Settings, LogOut, LayoutDashboard, UserSquare2, ShieldAlert } from 'lucide-react';
 import CircularText from './CircularText';
 import './Sidebar.css';
 
 export const SidebarLayout = ({ children, title }) => {
   const { role, user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,17 +17,17 @@ export const SidebarLayout = ({ children, title }) => {
   };
 
   const patientLinks = [
-    { to: '/patient-dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/patient-appointments', icon: Calendar, label: 'Appointments' },
-    { to: '/patient-prescriptions', icon: FileText, label: 'Prescriptions' },
-    { to: '/patient-settings', icon: Settings, label: 'Settings' }
+    { to: '/patient-dashboard', icon: LayoutDashboard, label: 'sidebar.dashboard' },
+    { to: '/patient-appointments', icon: Calendar, label: 'sidebar.appointments' },
+    { to: '/patient-prescriptions', icon: FileText, label: 'sidebar.prescriptions' },
+    { to: '/patient-settings', icon: Settings, label: 'sidebar.settings' }
   ];
 
   const hospitalLinks = [
-    { to: '/hospital-dashboard', icon: LayoutDashboard, label: 'Overview' },
-    { to: '/hospital-appointments', icon: Calendar, label: 'Appointments' },
-    { to: '/hospital-prescriptions', icon: ShieldAlert, label: 'Manage Rx' },
-    { to: '/hospital-settings', icon: Settings, label: 'Settings' }
+    { to: '/hospital-dashboard', icon: LayoutDashboard, label: 'sidebar.overview' },
+    { to: '/hospital-appointments', icon: Calendar, label: 'sidebar.appointments' },
+    { to: '/hospital-prescriptions', icon: ShieldAlert, label: 'sidebar.manage_rx' },
+    { to: '/hospital-settings', icon: Settings, label: 'sidebar.settings' }
   ];
 
   const links = role === 'patient' ? patientLinks : hospitalLinks;
@@ -47,7 +49,7 @@ export const SidebarLayout = ({ children, title }) => {
           <img src={user?.avatar} alt="Profile" className="avatar" />
           <div className="user-info">
             <span className="user-name">{user?.name}</span>
-            <span className="badge badge-primary">{role}</span>
+            <span className="badge badge-primary">{t(`role.${role}`)}</span>
           </div>
         </div>
 
@@ -59,7 +61,7 @@ export const SidebarLayout = ({ children, title }) => {
               className={({ isActive }) => `nav-item flex items-center ${isActive ? 'active' : ''}`}
             >
               <link.icon size={20} className="nav-icon" />
-              <span>{link.label}</span>
+              <span>{t(link.label)}</span>
             </NavLink>
           ))}
         </nav>
@@ -67,7 +69,7 @@ export const SidebarLayout = ({ children, title }) => {
         <div className="sidebar-footer">
           <button onClick={handleLogout} className="logout-btn flex items-center w-full">
             <LogOut size={20} />
-            <span>Sign Out</span>
+            <span>{t('sidebar.sign_out')}</span>
           </button>
         </div>
       </aside>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Shield, Key, IdCard, ArrowRight, Lock, ShieldCheck, User, Hospital, Mail } from 'lucide-react';
 import CircularText from '../components/CircularText';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import './Login.css';
 
 const Login = () => {
@@ -11,20 +13,19 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleRoleChange = (newRole) => {
     setRole(newRole);
-    // Auto-fill for demo purposes to match the mock db
     setEmail(newRole === 'patient' ? 'patient@demo.com' : 'hospital@demo.com');
     setPassword('123456');
     setError('');
   };
 
   React.useEffect(() => {
-    // Initial auto-fill
     setEmail(role === 'patient' ? 'patient@demo.com' : 'hospital@demo.com');
     setPassword('123456');
   }, [role]);
@@ -53,58 +54,58 @@ const Login = () => {
           <img src="/src/assets/ash_brush_bg.png" alt="Ash Paint Background" style={{ width: '450px', position: 'absolute', mixBlendMode: 'multiply', opacity: 0.9, zIndex: 1 }} />
           <img src="/src/assets/brush_logo.png" alt="SwasthyaKosh Brush Logo" style={{ width: '380px', objectFit: 'contain', mixBlendMode: 'multiply', filter: 'grayscale(1) brightness(1.2) contrast(1.5)', position: 'relative', zIndex: 2 }} />
         </div>
-        
+
         <div className="hero-content">
           <div className="hero-brand-label" style={{ fontFamily: "'Borgen', 'Outfit', sans-serif", color: '#5C4033', fontWeight: '900', letterSpacing: '5px', textTransform: 'uppercase', fontSize: '28px', marginBottom: '16px' }}>SwasthyaKosh</div>
-          <h1 className="hero-title">The Future of Secure Health Records.</h1>
+          <h1 className="hero-title">{t('login.hero_title')}</h1>
           <p className="hero-subtitle">
-            A high-end, secure digital vault for all your medical
-            documentation, powered by decentralized security.
+            {t('login.hero_subtitle')}
           </p>
         </div>
 
         <div className="trust-badges">
-          <span><ShieldCheck size={14} /> ISO 27001 Certified</span>
-          <span><Lock size={14} /> End-to-End Encrypted</span>
+          <span><ShieldCheck size={14} /> {t('login.iso_certified')}</span>
+          <span><Lock size={14} /> {t('login.encrypted')}</span>
         </div>
       </div>
 
       <div className="login-right">
+        <LanguageSwitcher className="login-lang-switcher" />
         <div className="login-form-container">
           <div className="form-header">
-            <h2>Welcome Back</h2>
-            <p>Access your medical history securely.</p>
+            <h2>{t('login.welcome_back')}</h2>
+            <p>{t('login.subtitle')}</p>
           </div>
 
           <div className="role-tabs">
-            <button 
+            <button
               className={`role-tab ${role === 'patient' ? 'active' : ''}`}
               onClick={() => handleRoleChange('patient')}
               type="button"
             >
-              <User size={16} /> Patient
+              <User size={16} /> {t('login.patient')}
             </button>
-            <button 
+            <button
               className={`role-tab ${role === 'hospital' ? 'active' : ''}`}
               onClick={() => handleRoleChange('hospital')}
               type="button"
             >
-              <Hospital size={16} /> Hospital
+              <Hospital size={16} /> {t('login.hospital')}
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             {error && <div className="error-alert">{error}</div>}
-            
+
             <div className="input-group">
-              <label>Email ID</label>
+              <label>{t('login.email_id')}</label>
               <div className="input-wrapper">
                 <Mail size={20} className="input-icon" />
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
+                  placeholder={t('login.email_placeholder')}
                   required
                 />
               </div>
@@ -112,13 +113,13 @@ const Login = () => {
 
             <div className="input-group">
               <div className="flex justify-between w-full">
-                <label>Security PIN / OTP</label>
-                <a href="#" className="forgot-link">Forgot?</a>
+                <label>{t('login.security_pin')}</label>
+                <a href="#" className="forgot-link">{t('login.forgot')}</a>
               </div>
               <div className="input-wrapper">
                 <Key size={20} className="input-icon" />
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••"
@@ -129,21 +130,21 @@ const Login = () => {
 
             <div className="remember-me">
               <input type="checkbox" id="remember" />
-              <label htmlFor="remember">Remember this device</label>
+              <label htmlFor="remember">{t('login.remember_device')}</label>
             </div>
 
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'AUTHENTICATING...' : 'SIGN IN'}
+              {loading ? t('login.authenticating') : t('login.sign_in')}
               <ArrowRight size={20} />
             </button>
           </form>
 
           <div className="register-prompt">
-            Don't have a digital health ID? <a href="#">Create one now</a>
+            {t('login.no_health_id')} <a href="#">{t('login.create_one')}</a>
           </div>
 
           <div className="legal-links">
-            <a href="#">PRIVACY POLICY</a> • <a href="#">TERMS OF SERVICE</a> • <a href="#">HELP CENTER</a>
+            <a href="#">{t('login.privacy_policy')}</a> &bull; <a href="#">{t('login.terms_of_service')}</a> &bull; <a href="#">{t('login.help_center')}</a>
           </div>
         </div>
       </div>
